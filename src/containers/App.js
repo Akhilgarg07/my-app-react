@@ -1,29 +1,45 @@
 import React,{Component} from 'react';
 import './App.css';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 // import Radium,{ StyleRoot } from 'radium';
-import Person from './Person/Person';
+import Persons from '../components/Persons/Persons';
+// import classes from '*.module.css';
+import Cockpit from '../components/Cockpit/Cockpit';
 
 
-const StyledButton = styled.button`
-  background-color: ${props => props.alt ? 'red' : 'green'};
-  color:white;
-  font: inherit;
-  border: 1px solid blue;
-  padding: 8px;
-  cursor:pointer;
-  &:hover {
-    background-color:${props => props.alt ? 'salmon' : 'lightgreen'};
-    color:black;
-`;
+// const StyledButton = styled.button`
+//   background-color: ${props => props.alt ? 'red' : 'green'};
+//   color:white;
+//   font: inherit;
+//   border: 1px solid blue;
+//   padding: 8px;
+//   cursor:pointer;
+//   &:hover {
+//     background-color:${props => props.alt ? 'salmon' : 'lightgreen'};
+//     color:black;
+// `;
 
 class App extends Component {
+  constructor(props){
+    super(props);
+    console.log("[App.js] constructor");
+    //we can set state here too
+  }
   state = {
     persons:[
       {id: 'ada',name:'Akhil',age:21},
       {id: 'scd',name:'Akriti',age:23}
     ],
     showPersons: false
+  }
+
+  static getDerivedStateFromProps(props,state){
+    console.log('[App.js] getDerivedStateFromProps')
+    return state;
+  }
+
+  componentDidMount(){
+    console.log('[App.js] componentDidMount');
   }
   // switchNameHandler = (newName) => {
   //   this.setState({
@@ -60,31 +76,22 @@ class App extends Component {
   }
 
   render(){
-    const style = {
-      backgroundColor: 'green',
-      color:'white',
-      font: 'inherit',
-      border: '1px solid blue',
-      padding: '8px',
-      cursor:'pointer',
-      ':hover': {
-        backgroundColor:'lightgreen',
-        color:'black'
-      }
-    };
-
+    console.log("[App.js] render")
     let persons = null;
     if(this.state.showPersons){
       persons = (
         <div>
-          {this.state.persons.map((person,index) => {
+          <Persons persons={this.state.persons}
+                   clicked={this.deletePersonHandler}
+                   changed={this.nameChangedHandler}/>
+          {/* {this.state.persons.map((person,index) => {
             return <Person 
                     click = {()=>this.deletePersonHandler(index)}
                     name={person.name} 
                     age={person.age}
                     key={person.id}
                     changed={(event)=>this.nameChangedHandler(event,person.id)}/>
-          })}
+          })} */}
           {/* <Person 
             name={this.state.persons[0].name} 
             age={this.state.persons[0].age}/>
@@ -102,23 +109,14 @@ class App extends Component {
       // };
     }
 
-    const classes = [];
-    if(this.state.persons.length<=2){
-      classes.push('blue')
-    }
-    if(this.state.persons.length<=1){
-      classes.push('bold')
-    }
-
+    
   return (
     // <StyleRoot>
     <div className="App">
-      <h1>My Journal</h1>
-      <p className={classes.join(' ')}>Welcome guys subscribe like share comment</p>
-      <StyledButton
-        alt = {this.state.showPersons}
-        onClick={this.togglePersonHandler}>Switch</StyledButton>
-
+      <Cockpit  title={this.props.apptitle}
+                showPersons={this.state.showPersons}
+                persons = {this.state.persons} 
+                clicked={this.togglePersonHandler}/>
       {persons}
     </div>
     /* </StyleRoot> */
